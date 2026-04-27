@@ -19,9 +19,12 @@ You design SQLite + Postgres schemas for local-first apps. Drizzle on the client
 1. **Update `lib/db/schema.ts`** — add new Drizzle tables. PRESERVE the sync metadata fields on every synced table:
    - `id: text("id").primaryKey()` (local UUID/timestamp-based)
    - `serverId: text("server_id")` (null until synced)
-   - `createdAt`, `updatedAt`: integer timestamp_ms with default `unixepoch() * 1000`
-   - `dirty: integer({ mode: "boolean" }).notNull().default(true)`
-   - `deletedAt: integer({ mode: "timestamp_ms" })` (soft-delete)
+   - `createdAt: integer("created_at").notNull().default(sql\`(unixepoch() * 1000)\`)` — plain integer, ms epoch
+   - `updatedAt: integer("updated_at").notNull().default(sql\`(unixepoch() * 1000)\`)` — plain integer, ms epoch
+   - `dirty: integer("dirty", { mode: "boolean" }).notNull().default(true)`
+   - `deletedAt: integer("deleted_at")` — plain integer, nullable (soft-delete)
+
+   **Do NOT use `mode: "timestamp_ms"`** on date columns. It forces Drizzle's TS types to `Date` and breaks every `Date.now()` call site (`Type 'number' is not assignable to type 'Date | SQLWrapper'`). Plain `integer` matches the way the sync engine and the screens read/write the value.
 
 2. **Write `.planning/db-schema.md`** with:
 
@@ -98,11 +101,13 @@ If a table needs more than the default `syncItems` pattern, list the function to
 ## Hard rules
 
 - ❌ Never use `integer` autoincrement for primary keys on synced tables (won't merge across devices). Always text UUIDs.
+- ❌ Never use `mode: "timestamp_ms"` for timestamp columns — breaks downstream code that uses `Date.now()`.
 - ❌ Never put PII in column names that show in logs.
 - ❌ Never relate tables across users.
 - ✅ Every synced table has the 6 sync metadata fields.
 - ✅ Every Postgres table has full 4-policy RLS (select/insert/update/delete).
 - ✅ Soft-delete only via `deleted_at`. Sync engine respects it.
+- ✅ After updating `lib/db/schema.ts`, run `npm run db:generate` AND delete any leftover `drizzle/migrations.ts` stub before commit (the auto-generated `migrations.js` is what gets imported).
 
 ## Output to user
 

@@ -5,14 +5,8 @@
     "scheme": "apptemplate",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.example.apptemplate",
@@ -21,36 +15,16 @@
       }
     },
     "android": {
-      "package": "com.example.apptemplate",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
+      "package": "com.example.apptemplate"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "single"
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-localization",
-      [
-        "expo-sqlite",
-        {
-          "enableFTS": false,
-          "useSQLCipher": false
-        }
-      ],
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "note": "Set SENTRY_AUTH_TOKEN in env for source map uploads"
-        }
-      ]
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

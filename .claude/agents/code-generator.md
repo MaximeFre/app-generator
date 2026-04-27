@@ -54,10 +54,13 @@ For new lib modules:
 
 For new Drizzle tables:
 
-1. Update `lib/db/schema.ts`.
-2. Run `npm run db:generate` (Bash tool with permission).
-3. Verify migrations file appears in `drizzle/`.
-4. Update `lib/db/sync.ts` only if the new table needs sync that differs from `items`.
+1. Update `lib/db/schema.ts`. Use plain `integer` for ms-epoch timestamps (NOT `mode: "timestamp_ms"`).
+2. Delete any leftover `drizzle/migrations.ts` stub (it shadows the auto-generated `migrations.js`).
+3. Run `npm run db:generate` (Bash tool with permission). Drizzle-kit produces `drizzle/<NNNN>_*.sql`, `drizzle/migrations.js`, `drizzle/meta/`.
+4. Verify the new SQL migration file appears.
+5. Update `lib/db/sync.ts` only if the new table needs sync that differs from `items`.
+
+Null comparisons: always `isNull(col)` / `isNotNull(col)`, never `eq(col, null)` (TS error + always-false SQL).
 
 ## Hard rules
 
@@ -81,16 +84,18 @@ For new Drizzle tables:
 ## Output
 
 Files written, in this order:
-1. Updated `app.json` (name, slug, bundle id from branding).
-2. Updated `lib/db/schema.ts` + run db:generate.
+1. Updated `app.json` (name, slug, bundle id from branding). If you reference `assets/images/icon.png` etc., **make sure the files actually exist** — Expo crashes at boot otherwise. Easiest path: leave the asset keys out of `app.json` until real PNGs are dropped in (Expo uses defaults).
+2. Updated `lib/db/schema.ts`, removed any `drizzle/migrations.ts` stub, ran `npm run db:generate`.
 3. New `lib/{module}.ts` if needed.
 4. New `components/{domain}/*.tsx`.
 5. New `app/(tabs)/{tab}.tsx` and other routes.
 6. Updated `app/(tabs)/_layout.tsx` to register tabs.
 7. Updated `messages/{fr,en}.json` only if copywriter missed keys (rare).
 
-After all writes, run:
-- `npx tsc --noEmit` (verify zero errors).
-- Glob `find app components lib -name "*.tsx" -o -name "*.ts" | head -20` to confirm structure.
+After all writes, run the **smoke checks** in this order:
+1. `npx tsc --noEmit` (must be zero errors).
+2. `npx expo config --type public` (must succeed — proves `app.json` + plugins resolve cleanly).
+3. `npx expo export --platform web --output-dir /tmp/_smoke` (full Metro bundle, ~15s — proves Babel/Metro/NativeWind/Drizzle SQL inline-import all wire up). If `web.output: "single"` and there's no expo-sqlite usage at module-eval, this passes. Errors here always mean a config issue: missing babel plugin, deprecated NativeWind config, wrong PostHog/Sentry option name. **Fix before returning.**
+4. Glob `find app components lib -name "*.tsx" -o -name "*.ts" | head -20` to confirm structure.
 
-Return a summary: "{N} files written, {M} routes, {P} new components, {T} tables. Typecheck: ✅".
+Return a summary: "{N} files written, {M} routes, {P} new components, {T} tables. tsc ✅ · expo config ✅ · web bundle ✅."

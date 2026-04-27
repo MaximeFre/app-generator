@@ -112,10 +112,27 @@ Tailwind's `sm:`, `md:` breakpoints work on web target only. On native, use `Dim
 
 Checklist:
 1. `metro.config.js` exports `withNativeWind(config, { input: "./global.css" })`.
-2. `babel.config.js` has both `["babel-preset-expo", { jsxImportSource: "nativewind" }]` AND `"nativewind/babel"`.
+2. `babel.config.js` uses `["babel-preset-expo", { jsxImportSource: "nativewind" }]`. **Do NOT add `"nativewind/babel"`** — it's deprecated in NativeWind v4 (was the v2 way). Adding it triggers `Cannot find module 'nativewind/babel'` at build time.
 3. `global.css` is imported in `app/_layout.tsx` (must be the FIRST import).
 4. `tailwind.config.js` `content` array includes the file path of the component you're editing.
-5. Cleared Metro cache: `npx expo start -c`.
+5. Cleared Metro cache: `npx expo start -c` (or `rm -rf node_modules/.cache .expo`).
+
+### Canonical babel.config.js for NativeWind v4 + Drizzle in this template
+
+```js
+module.exports = (api) => {
+  api.cache(true);
+  return {
+    presets: [["babel-preset-expo", { jsxImportSource: "nativewind" }]],
+    plugins: [
+      ["inline-import", { extensions: [".sql"] }],
+      "react-native-reanimated/plugin",
+    ],
+  };
+};
+```
+
+Reanimated plugin must be **last** in the plugins array — its docs are explicit about that.
 
 ## When to escape NativeWind
 

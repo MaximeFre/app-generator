@@ -18,7 +18,6 @@ export function initSentry(): void {
     dsn: env.sentryDsn,
     environment: env.appEnv,
     tracesSampleRate: env.appEnv === "production" ? 0.1 : 1.0,
-    profilesSampleRate: env.appEnv === "production" ? 0.05 : 1.0,
     sampleRate: 1.0,
     enableAutoPerformanceTracing: true,
     enableNative: true,

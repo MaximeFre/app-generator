@@ -11,10 +11,10 @@ export const items = sqliteTable("items", {
   title: text("title").notNull(),
   notes: text("notes"),
   isDone: integer("is_done", { mode: "boolean" }).notNull().default(false),
-  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(sql`(unixepoch() * 1000)`),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull().default(sql`(unixepoch() * 1000)`),
+  createdAt: integer("created_at").notNull().default(sql`(unixepoch() * 1000)`),
+  updatedAt: integer("updated_at").notNull().default(sql`(unixepoch() * 1000)`),
   dirty: integer("dirty", { mode: "boolean" }).notNull().default(true),
-  deletedAt: integer("deleted_at", { mode: "timestamp_ms" }),
+  deletedAt: integer("deleted_at"),
 });
 
 export type Item = typeof items.$inferSelect;

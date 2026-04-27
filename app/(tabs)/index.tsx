@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlatList, Text, View, Pressable } from "react-native";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
-import { eq } from "drizzle-orm";
+import { eq, isNull } from "drizzle-orm";
 
 import { Screen } from "@/components/ui/Screen";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +12,7 @@ import { t } from "@/lib/i18n";
 import { track } from "@/lib/analytics/posthog";
 
 export default function Home() {
-  const { data } = useLiveQuery(db.select().from(items).where(eq(items.deletedAt, null as unknown as number)));
+  const { data } = useLiveQuery(db.select().from(items).where(isNull(items.deletedAt)));
   const [draft, setDraft] = useState("");
 
   async function add() {

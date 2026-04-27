@@ -82,7 +82,12 @@ Before invoking each sub-agent, instruct it to read `.claude/agent-memory/{agent
 **Sub-agent**: `code-generator`
 **Inputs**: ALL planning docs
 **Outputs**: new screens, components, lib modules, updated `app.json` (name/slug/bundle).
-**Validation**: `npx tsc --noEmit` MUST pass. The `typecheck-touched.sh` hook will already enforce per-file but run a final full check.
+**Validation — three-gate smoke test**, ALL must pass before step 9:
+1. `npx tsc --noEmit` — zero errors.
+2. `npx expo config --type public` — proves config resolves.
+3. `npx expo export --platform web --output-dir /tmp/_smoke` — proves Metro bundles cleanly.
+
+See `pipeline.md` § Step 8 for the catalogue of common errors and their cause. If any gate fails, hand the stderr back to `code-generator` for repair before proceeding.
 
 ### Step 9 — Backend provisioning
 **Sub-agent**: `backend-provisioner`

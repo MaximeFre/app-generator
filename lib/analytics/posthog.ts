@@ -10,17 +10,16 @@ export async function initAnalytics(): Promise<void> {
     host: env.posthogHost,
     flushAt: 20,
     flushInterval: 30000,
-    captureAppLifecycleEvents: false,
-    enableSessionReplay: false,
+    captureNativeAppLifecycleEvents: false,
   });
 }
 
 export function track<E extends AnalyticsEvent>(event: E, props: EventProps[E]): void {
   if (!client) return;
-  client.capture(ANALYTICS_EVENTS[event], props as Record<string, unknown>);
+  client.capture(ANALYTICS_EVENTS[event], props as Record<string, string | number | boolean>);
 }
 
-export function identify(userId: string, traits?: Record<string, unknown>): void {
+export function identify(userId: string, traits?: Record<string, string | number | boolean>): void {
   if (!client) return;
   client.identify(userId, traits);
 }

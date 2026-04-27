@@ -109,7 +109,9 @@ Write:
 Then I will run `npm run db:generate` to produce migrations.
 ```
 
-After sub-agent returns: run `Bash(npm run db:generate)`. Verify `drizzle/0001_*.sql` (or higher) exists.
+After sub-agent returns:
+1. If `drizzle/migrations.ts` exists as a hand-written stub, delete it (`rm drizzle/migrations.ts`). Drizzle-kit auto-generates `migrations.js` and a leftover `.ts` will be picked up by the TS resolver and shadow it — `ensureMigrations()` then no-ops, tables never get created.
+2. Run `Bash(npm run db:generate)`. Verify `drizzle/<NNNN>_*.sql` AND `drizzle/migrations.js` AND `drizzle/meta/_journal.json` exist.
 
 ---
 
@@ -182,7 +184,23 @@ After all writes:
 Do NOT add new dependencies without asking. Do NOT bypass any rule in .claude/rules/.
 ```
 
-After return: verify with `npx tsc --noEmit` once more (Bash).
+After return: run the **first-boot smoke gate** (Bash). Three commands, all must pass before continuing to step 9:
+
+1. `npx tsc --noEmit` — zero errors.
+2. `npx expo config --type public` — must succeed (proves `app.json` plugins resolve, no missing native modules referenced at config-load time, no broken plugin entries).
+3. `npx expo export --platform web --output-dir /tmp/_smoke` — full Metro bundle. Catches Babel/NativeWind/Drizzle-SQL/inline-import wiring issues in ~15-30s without needing a simulator.
+
+If any of the three fails, hand the error back to `code-generator` with the exact stderr — do not proceed to step 9. Common breakages and their cause:
+- `Type 'number' is not assignable to type 'Date | SQLWrapper'` → schema used `mode: "timestamp_ms"`. Drop the mode.
+- `'captureAppLifecycleEvents' does not exist in type 'PostHogOptions'` → use `captureNativeAppLifecycleEvents`.
+- `'profilesSampleRate' does not exist in type 'ReactNativeOptions'` → remove from Sentry init.
+- `Missing semicolon (1:6)` in a `.sql` file → `babel-plugin-inline-import` not installed or not in `babel.config.js`.
+- `Unable to resolve module ./0000_*.sql` → `metro.config.js` missing `config.resolver.sourceExts.push("sql")`.
+- `Cannot find module 'nativewind/babel'` → remove that preset, NativeWind v4 uses metro plugin only.
+- `Cannot find module .../SQLiteDatabase` (during `expo config`) → `expo-sqlite` declared as a plugin in `app.json` with the `enableFTS`/`useSQLCipher` shape — remove the plugin entry entirely (auto-linked).
+- `NativeDatabase is not a constructor` (web export only) → set `web.output: "single"` in `app.json`.
+- `Cannot find module 'expo/tsconfig.base'` (IDE only) → run `npm install`, restart TS Server.
+- `ERESOLVE unable to resolve dependency tree` (npm install) → React vs RN peer mismatch. See expo-bootstrap version matrix.
 
 ---
 

@@ -24,7 +24,6 @@ Sentry.init({
   dsn: env.sentryDsn,
   environment: env.appEnv,                    // dev/preview/production
   tracesSampleRate: env.appEnv === "production" ? 0.1 : 1.0,
-  profilesSampleRate: env.appEnv === "production" ? 0.05 : 1.0,
   sampleRate: 1.0,                            // error sampling (separate from traces)
   enableAutoPerformanceTracing: true,
   attachScreenshot: false,                    // PII risk
@@ -40,6 +39,8 @@ Sentry.init({
   },
 });
 ```
+
+> ⚠️ Do NOT add `profilesSampleRate` to the RN init. That option lives in `@sentry/profiling-node` (Node-only) — passing it to `@sentry/react-native@5.x` is a TS error: `'profilesSampleRate' does not exist in type 'ReactNativeOptions'`. RN profiling exists but is enabled differently (via the `Sentry.ReactNativeTracing` integration with `enableNativeFramesTracking`).
 
 ## Ignored error patterns
 

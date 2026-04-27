@@ -14,11 +14,28 @@ You almost always use BOTH. The "managed workflow" vs "bare workflow" distinctio
 
 ## Pinned versions in this template
 
-- Expo SDK 54 (Fall 2025). React Native 0.74. New Architecture **enabled** (`newArchEnabled: true` in app.json).
+- **Expo SDK 51** (the working combo for this template). React Native 0.74.5. React 18.2.0. New Architecture **disabled** (`newArchEnabled: false`) — RC + Sentry + Drizzle on SDK 51 + new arch is risky.
 - `expo-router` 3.5+ for file-based routing.
 - All `expo-*` packages must match the SDK version pin (look up in `package.json`).
 
 When upgrading, run `npx expo install --fix` — it aligns every `expo-*` package to the SDK.
+
+## Version compatibility matrix (read this before changing versions)
+
+The painful crash here is the React ↔ React Native peer dependency. Stick to a known-good combo:
+
+| Expo SDK | React | React Native | New Arch default | Notes |
+|---|---|---|---|---|
+| 51 | 18.2.0 | 0.74.5 | off (opt-in) | **what this template uses** |
+| 52 | 18.3.1 | 0.76.x | on | bumps to expo-router v4 |
+| 53 | 19.0.0 | 0.79.x | on | RC and Sentry need recent versions |
+| 54 | 19.0.0 | 0.81.x | on | latest, more breaking changes |
+
+Mismatches that we have hit:
+- `react@18.3.1` + `react-native@0.74.5` → ERESOLVE (RN 0.74 demands React 18.2.0).
+- `react@18.2.0` + `react-native@0.76.x` → also fails (RN 0.76 demands React 18.3.1).
+
+When in doubt, run `npx create-expo-app@latest --template blank-typescript /tmp/probe` and copy the `dependencies` block from its `package.json`. That's the canonical version set for the latest SDK.
 
 ## Bootstrapping a fresh clone
 
@@ -71,13 +88,54 @@ Install the resulting `.app`/`.apk` once on each test device. After that, you ca
 "plugins": [
   "expo-router",
   "expo-secure-store",
-  "expo-localization",
-  ["expo-sqlite", { "enableFTS": false, "useSQLCipher": false }],
-  ["@sentry/react-native/expo", { "url": "https://sentry.io/" }]
+  "expo-localization"
 ]
 ```
 
+Notes:
+- **`expo-sqlite` does NOT need a plugin entry on SDK 51** — adding one with `{ enableFTS: ..., useSQLCipher: ... }` triggers `Cannot find module .../SQLiteDatabase` at config-load time. The library auto-links via the package install.
+- **`@sentry/react-native/expo` plugin** is for production source-map uploads. Add it only after configuring `SENTRY_AUTH_TOKEN` in EAS env, otherwise `expo-doctor` and `expo config` complain.
+
 Add a plugin → MUST run `npx expo prebuild --clean` AND rebuild the dev client. Hot reload doesn't pick up native config changes.
+
+## Required Babel plugin for Drizzle SQL imports
+
+The Drizzle migrator imports raw `.sql` files: `import m0000 from "./0000_x.sql"`. Without help, Babel parses them as JS and crashes with `Missing semicolon`.
+
+Two pieces required, BOTH are needed:
+
+```js
+// metro.config.js
+config.resolver.sourceExts.push("sql");      // tells Metro `.sql` is a known module path
+```
+
+```js
+// babel.config.js
+module.exports = (api) => {
+  api.cache(true);
+  return {
+    presets: [["babel-preset-expo", { jsxImportSource: "nativewind" }]],
+    plugins: [
+      ["inline-import", { extensions: [".sql"] }],   // reads file as a string at compile time
+      "react-native-reanimated/plugin",
+    ],
+  };
+};
+```
+
+Install: `npm install --save-dev babel-plugin-inline-import`.
+
+Without the babel plugin, you get `SyntaxError: Missing semicolon (1:6)` on the SQL file. Without the metro `sourceExts` entry, you get `Unable to resolve module ./foo.sql`.
+
+## Web target with expo-sqlite
+
+`expo-sqlite` is iOS/Android only — it crashes static-render web with `NativeDatabase is not a constructor`. For any app using SQLite, set:
+
+```json
+"web": { "bundler": "metro", "output": "single" }
+```
+
+`output: "single"` = SPA (no SSR). Avoids the static-render crash. Only revisit `output: "static"` if the app needs SEO and you've gated the DB init behind a `Platform.OS !== "web"` check.
 
 ## Common issues
 

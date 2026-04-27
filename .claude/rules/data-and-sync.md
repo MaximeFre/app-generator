@@ -9,10 +9,18 @@ paths: ["lib/db/**/*.ts", "lib/supabase/**/*.ts", "app/**/*.tsx"]
 
 - All user-generated data hits `expo-sqlite` via Drizzle FIRST.
 - Cloud is mirror, not source. If sync fails, the app keeps working.
-- Every table on Supabase that mirrors a local table MUST have:
-  - `id` (text, server-side uuid)
+- Every synced **local** Drizzle table MUST have these 6 metadata fields:
+  - `id: text("id").primaryKey()` (local UUID)
+  - `serverId: text("server_id")` (null until synced)
+  - `createdAt: integer("created_at").notNull().default(sql\`(unixepoch() * 1000)\`)`
+  - `updatedAt: integer("updated_at").notNull().default(sql\`(unixepoch() * 1000)\`)`
+  - `dirty: integer("dirty", { mode: "boolean" }).notNull().default(true)`
+  - `deletedAt: integer("deleted_at")` — nullable
+  - **Use plain `integer` (no `mode: "timestamp_ms"`)** — see anti-patterns below.
+- Every **remote** Supabase table that mirrors a local table MUST have:
+  - `id` (uuid, server-generated)
   - `local_id` (text, the SQLite primary key)
-  - `user_id` (text, references `auth.users.id`)
+  - `user_id` (uuid, references `auth.users.id`)
   - `updated_at` (timestamptz, default now())
   - `deleted_at` (timestamptz, nullable — soft delete)
   - RLS: `user_id = auth.uid()` for SELECT/INSERT/UPDATE/DELETE.
@@ -62,3 +70,6 @@ create policy "items_owner_delete" on public.items
 - ❌ Reading from Supabase before reading from local.
 - ❌ Forgetting to mark a row `dirty=true` on update.
 - ❌ Cascading deletes without soft-delete first.
+- ❌ Using `mode: "timestamp_ms"` on Drizzle integer columns. The TS types switch to `Date` on read AND demand `Date` on write — fighting `Date.now()` everywhere. Plain `integer` is the right choice.
+- ❌ Using `eq(col, null)` for null comparisons. Always `isNull(col)` / `isNotNull(col)`.
+- ❌ Hand-writing a `drizzle/migrations.ts` stub. drizzle-kit auto-generates `migrations.js` on `db:generate`; a hand-written `.ts` shadow stops the table from ever being created.

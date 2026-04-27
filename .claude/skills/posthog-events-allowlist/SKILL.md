@@ -87,7 +87,9 @@ PostHog RN supports autocapture (every screen view + every tap). Do NOT enable i
 1. Quota burn.
 2. Most autocaptured events are noise — you'll never read them.
 
-The config in `lib/analytics/posthog.ts` already disables it (`captureAppLifecycleEvents: false`).
+The config in `lib/analytics/posthog.ts` already disables it (`captureNativeAppLifecycleEvents: false`).
+
+> ⚠️ The option is named `captureNativeAppLifecycleEvents` (with the **Native** prefix). `captureAppLifecycleEvents` does NOT exist on `posthog-react-native` and triggers a TS error: `'captureAppLifecycleEvents' does not exist in type 'PostHogOptions'. Did you mean to write 'captureNativeAppLifecycleEvents'?`
 
 ## Session replay: NO
 
