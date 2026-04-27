@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm install --save-dev:*)",
+      "Bash(npm run *)",
+      "Bash(npx expo *)",
+      "Bash(npx expo-doctor)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(npx drizzle-kit *)",
+      "Bash(npx eas *)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout -b *)",
+      "Bash(git push:*)",
+      "Bash(mkdir -p .planning)",
+      "Bash(mkdir -p assets/*)",
+      "Bash(mkdir -p messages)",
+      "Bash(curl -sL --max-time *)"
+    ],
+    "deny": [
+      "Read(.env*)",
+      "Read(**/*.key)",
+      "Read(**/credentials*)",
+      "Read(**/google-service-account.json)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(curl * | bash*)",
+      "Bash(eas build --profile production*)",
+      "Bash(eas submit*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": ".claude/scripts/check-i18n-parity.sh" },
+          { "type": "command", "command": ".claude/scripts/typecheck-touched.sh" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": ".claude/scripts/billing-guardrail.sh" }
+        ]
+      }
+    ]
+  }
+}

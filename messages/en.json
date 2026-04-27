@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "AppTemplate",
+    "tagline": "Built local-first, premium when you need it"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "magicLink": "Send magic link",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "signOut": "Sign out",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "invalidCredentials": "Invalid email or password."
+    }
+  },
+  "tabs": {
+    "home": "Home",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Your items",
+    "empty": "No items yet. Tap + to add one.",
+    "addItem": "Add item"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "subscription": "Subscription",
+    "language": "Language",
+    "premium": "Premium active",
+    "free": "Free plan",
+    "upgrade": "Upgrade to premium",
+    "restore": "Restore purchases",
+    "syncNow": "Sync now",
+    "syncResult": "Synced {pulled} from cloud, {pushed} to cloud."
+  },
+  "paywall": {
+    "title": "Go premium",
+    "subtitle": "Cloud sync, multi-device, unlimited history",
+    "trial": "Start free trial",
+    "subscribe": "Subscribe",
+    "termsHint": "Recurring billing, cancel anytime."
+  }
+}

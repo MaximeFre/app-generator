@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "AppTemplate",
+    "tagline": "Local d'abord, premium quand tu en as besoin"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "Créer un compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "magicLink": "Envoyer un lien magique",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "haveAccount": "Déjà un compte ?",
+    "signOut": "Se déconnecter",
+    "errors": {
+      "generic": "Une erreur est survenue. Réessaie.",
+      "invalidCredentials": "Email ou mot de passe invalide."
+    }
+  },
+  "tabs": {
+    "home": "Accueil",
+    "settings": "Réglages"
+  },
+  "home": {
+    "title": "Tes éléments",
+    "empty": "Aucun élément. Appuie sur + pour en ajouter un.",
+    "addItem": "Ajouter"
+  },
+  "settings": {
+    "title": "Réglages",
+    "account": "Compte",
+    "subscription": "Abonnement",
+    "language": "Langue",
+    "premium": "Premium actif",
+    "free": "Offre gratuite",
+    "upgrade": "Passer en premium",
+    "restore": "Restaurer les achats",
+    "syncNow": "Synchroniser",
+    "syncResult": "{pulled} récupérés, {pushed} envoyés."
+  },
+  "paywall": {
+    "title": "Passe en premium",
+    "subtitle": "Sync cloud, multi-appareils, historique illimité",
+    "trial": "Commencer l'essai gratuit",
+    "subscribe": "S'abonner",
+    "termsHint": "Renouvellement automatique, annulable à tout moment."
+  }
+}
