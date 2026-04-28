@@ -50,8 +50,9 @@ paths: ["app/**/*.tsx", "components/**/*.tsx", "lib/**/*.ts", "app.json", "metro
 - `expo-router`
 - `expo-secure-store`
 - `expo-localization`
-- `expo-sqlite`
 - `@sentry/react-native/expo`
+
+❌ Do NOT add `expo-sqlite` as a plugin entry on SDK 51+ — it auto-links via the package install. A plugin entry crashes `npx expo config` with `Cannot find module .../SQLiteDatabase` (see `.claude/agent-memory/_global.md` 2026-04-28 entry).
 
 Adding a plugin → also rebuild dev client (`npx expo prebuild --clean`).
 

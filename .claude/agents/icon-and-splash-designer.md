@@ -69,10 +69,14 @@ Plain `--color-background` with the app icon centered at 200×200. NO text. NO l
 ## Process
 
 1. Read brand + design system.
-2. Generate 3 concepts in text (the user picks).
-3. If `seo-image-gen` skill is available, hand off the prompt for the chosen concept and have it write directly to `assets/images/icon.png`.
-4. Otherwise, give the user a copy-paste prompt + suggest tools (Figma, Icon Kitchen, Bakery).
+2. Generate 3 concepts in text and pick ONE explicitly.
+3. **Generate the actual PNG** — this is mandatory, not optional:
+   - **Try `seo-image-gen`** first via `Skill("seo-image-gen", ...)` with the chosen concept's prompt. The skill writes to `assets/images/icon.png`.
+   - **Fallback path 1**: write a minimal SVG to `assets/images/icon.svg` and convert via Bash using `rsvg-convert` (`brew install librsvg`) OR `sharp-cli` (`npx sharp-cli -i icon.svg -o icon.png --resize 1024 1024`) OR `svgexport` (`npx svgexport icon.svg icon.png 1024:1024`).
+   - **Fallback path 2**: copy a minimal placeholder PNG (1024×1024 solid color from primary token) to `assets/images/icon.png`. Better than crashing at boot.
+4. Repeat for `splash.png` (1284×2778, simpler — same icon centered on the background color).
 5. Update `app.json` to ensure paths match (they already do — just confirm).
+6. **Verification (mandatory before returning)**: run `Bash("ls -la assets/images/icon.png")`. If the file does NOT exist, the step has failed — report explicitly. The pipeline must NOT proceed without `assets/images/icon.png`.
 
 ## Hard rules
 
@@ -82,4 +86,6 @@ Plain `--color-background` with the app icon centered at 200×200. NO text. NO l
 
 ## Output to user
 
-"Concept: {1-line description}. Files needed: icon.png (1024×1024), adaptive-icon.png (1024×1024 fg), splash.png (1284×2778), favicon.png (196×196)."
+"Concept: {1-line description}. Files written: icon.png ({size}KB), splash.png ({size}KB), adaptive-icon.png ({size}KB), favicon.png ({size}KB). Method: {seo-image-gen / svg→png / placeholder}."
+
+If method == "placeholder", flag it clearly so the user knows to commission a real icon before App Store submission.

@@ -11,6 +11,8 @@ import { initAnalytics, track } from "@/lib/analytics/posthog";
 import { initRevenueCat } from "@/lib/revenuecat/client";
 import { ensureMigrations } from "@/lib/db/client";
 import { useAuth } from "@/lib/store/auth";
+import { SheetProvider } from "@/components/ui/Sheet";
+import { ToastHost } from "@/components/ui/Toast";
 
 initSentry();
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -35,12 +37,15 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView className="flex-1">
       <SafeAreaProvider>
-        <StatusBar style="auto" />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="auth" />
-          <Stack.Screen name="paywall" options={{ presentation: "modal" }} />
-        </Stack>
+        <SheetProvider>
+          <StatusBar style="auto" />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="auth" />
+            <Stack.Screen name="paywall" options={{ presentation: "modal" }} />
+          </Stack>
+          <ToastHost />
+        </SheetProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

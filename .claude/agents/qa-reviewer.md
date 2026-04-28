@@ -24,6 +24,7 @@ Write `.planning/qa-report.md`:
 - Typecheck: ✅ / ❌ (paste first 5 errors if any)
 - Lint: ✅ / ❌
 - Drizzle migrations exist: ✅ / ❌
+- Visual assets exist (`assets/images/icon.png`, `splash.png`): ✅ / ❌
 
 ## Architecture compliance
 - Tabs ≤ 4: ✅ / ❌
@@ -59,6 +60,32 @@ Write `.planning/qa-report.md`:
 
 ## TODO from planning that's missing
 Cross-reference `.planning/app-architecture.md` § Routes and §Premium gates against actual files. List anything the orchestrator skipped.
+
+## Visual sanity (NEW — does this look like a real product?)
+
+Grep-driven checks. Each must pass for ✅:
+
+- **Tab icons present**: `grep -c "tabBarIcon" app/(tabs)/_layout.tsx` ≥ number of `<Tabs.Screen` lines.
+- **Headers on pushed screens**: every file in `app/` (not under `(tabs)/`, not declared as modal) imports `Header` from `@/components/ui/Header` OR has a manual back chevron pattern (`router.back`).
+- **EmptyState used**: every screen with a list (`useLiveQuery` returning an array) imports `EmptyState`.
+- **Per-feature paywall copy**: every `<PremiumGate feature="X">` in `app/` has corresponding `paywall.gate.X.{title,subtitle,cta}` keys in `messages/{fr,en}.json`.
+- **Lucide icons on Buttons**: count `<Button leftIcon=` in `app/`. ≥ N for primary CTAs (sample 5 main screens).
+- **Primitives over raw View+Text**: grep for `<View className=".*bg-muted/40 rounded.*">.*<Text` in `app/` — should be 0 (use `<Card>`).
+- **Skeleton on initial load**: every `useLiveQuery` followed by `data === undefined` branch renders `<Skeleton>` not `<ActivityIndicator>`.
+- **Onboarding gate**: `useOnboardingGate` is invoked in `app/_layout.tsx` OR equivalent guard.
+- **Greeting on home**: home screen renders `name` from preferences if available.
+
+## Auto-signals for /self-update
+
+List detected weaknesses to feed `/self-update` automatically (without user complaint). Examples:
+
+- "0 charts shipped despite 3 stat features in app-architecture.md"
+- "tabBarIcon missing on 2/4 tabs"
+- "EmptyState absent on history.tsx (list screen)"
+- "No haptics calls anywhere in app/"
+- "Premium gate `cloud_sync` wired but `lib/db/sync.ts` only registers `items`"
+
+These propagate to `/self-update` for proactive rule strengthening.
 
 ## Recommendation
 - ✅ Ship-ready / ⚠️ Fix list / ❌ Block

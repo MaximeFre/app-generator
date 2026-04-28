@@ -27,10 +27,22 @@ Write `.planning/product-brief.md` with this exact structure:
 ## Elevator pitch
 One sentence. ≤ 20 words. What it is + who it's for + what it replaces.
 
+## Domain (vertical)
+ONE of: `fitness | finance | journal | social | productivity | dating | creative | health | utility | travel`. Pick the closest match. The downstream agents (design-researcher, app-architect) load `.claude/domains/{vertical}.md` for vertical-specific defaults.
+
+## Cadence
+ONE of: `daily | weekly | session-based | one-shot`. This drives:
+- Home shape (streak surface vs goal vs next-action vs checklist)
+- Notification cadence
+- The default chart kinds (heatmap loves daily; goal ring loves weekly)
+
 ## Persona
 - **Who**: 2–3 sentences. Age range, context, what they currently use.
 - **Pain**: 1 sentence. The friction they hit weekly.
 - **Trigger**: when they reach for the app.
+
+## Confidence
+A number 0-100 representing how confident you are in the brief vs the user's intent. If < 70, list 1-3 follow-up questions in a "Questions for the user" section at the bottom — the orchestrator surfaces them before continuing. If ≥ 70, no questions.
 
 ## Top 3 jobs-to-be-done
 1. ...
@@ -63,10 +75,13 @@ One number that proves it works. e.g., "weekly active sessions per user", "items
 
 ## Process
 
-1. **If the brief is vague**: extract what's there, then list 3–5 clarifying questions in a short "Questions for the user" section at the bottom (the orchestrator will surface these).
-2. **Be opinionated**: pick a clear free/premium split. Don't list "every feature could be premium". Default rule: capture is free, scale + sync + exports are premium.
-3. **Persona is real**: a name, an age, a city, a habit. Don't write "users who want X".
-4. **No fluff**: if you can't justify a JTBD with one sentence on why it's painful today, drop it.
+1. **Classify domain first**. Read the brief. Pick the vertical. If unclear, pick the closest and note it. Verticals: `fitness | finance | journal | social | productivity | dating | creative | health | utility | travel`. No "other" — pick the closest.
+2. **Detect cadence**. Daily (journal, habit, water), weekly (workout-tracker), session-based (workout-flow, meditation), one-shot (trip planner, recipe lookup).
+3. **Score confidence**. If the brief is vague, set confidence < 70 and list 1-3 follow-up questions. The orchestrator decides whether to surface them.
+4. **Be opinionated**: pick a clear free/premium split. Don't list "every feature could be premium". Default rule: capture is free, scale + sync + exports are premium.
+5. **Persona is real**: a name, an age, a city, a habit. Don't write "users who want X".
+6. **No fluff**: if you can't justify a JTBD with one sentence on why it's painful today, drop it.
+7. **Read `.claude/domains/{vertical}.md`** if it exists — gives you defaults for the vertical (typical free/premium split, north-star metric language).
 
 ## Hard rules
 
