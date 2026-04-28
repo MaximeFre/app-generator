@@ -16,6 +16,11 @@ You design SQLite + Postgres schemas for local-first apps. Drizzle on the client
 
 ## Output
 
+ALWAYS-on baselines:
+
+- **`user_preferences` table** — local-only, no sync metadata, singleton row (`id PK = "default"`). Already exists in the template baseline (`lib/db/schema.ts`). DO NOT remove or duplicate. Schema mirrors the Zustand `usePreferences` store.
+- **`seed_rows` declarations** — for any table that ships with starter content (e.g. `exercises` with 50 default exercises for a fitness app, `categories` with default categories for a finance app), add a `seed_rows: T[]` block in `.planning/db-schema.md`. The code-generator will register them with `ensureSeed()` from `lib/db/seed.ts`. No seed runs without your explicit declaration.
+
 1. **Update `lib/db/schema.ts`** — add new Drizzle tables. PRESERVE the sync metadata fields on every synced table:
    - `id: text("id").primaryKey()` (local UUID/timestamp-based)
    - `serverId: text("server_id")` (null until synced)
@@ -104,9 +109,12 @@ If a table needs more than the default `syncItems` pattern, list the function to
 - ❌ Never use `mode: "timestamp_ms"` for timestamp columns — breaks downstream code that uses `Date.now()`.
 - ❌ Never put PII in column names that show in logs.
 - ❌ Never relate tables across users.
+- ❌ Never duplicate or remove the baseline `user_preferences` table. It's local-only by design.
 - ✅ Every synced table has the 6 sync metadata fields.
+- ✅ Every synced table is registered with `registerSyncTable<T>(meta)` in `lib/db/sync.ts` (code-generator does this — your job is to spec the `toRemote` / `fromRemote` shape in the planning doc).
 - ✅ Every Postgres table has full 4-policy RLS (select/insert/update/delete).
 - ✅ Soft-delete only via `deleted_at`. Sync engine respects it.
+- ✅ Declare `seed_rows: T[]` for any table that needs starter content. The seed runner (`lib/db/seed.ts`) handles it.
 - ✅ After updating `lib/db/schema.ts`, run `npm run db:generate` AND delete any leftover `drizzle/migrations.ts` stub before commit (the auto-generated `migrations.js` is what gets imported).
 
 ## Output to user

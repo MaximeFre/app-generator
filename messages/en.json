@@ -37,13 +37,129 @@
     "upgrade": "Upgrade to premium",
     "restore": "Restore purchases",
     "syncNow": "Sync now",
-    "syncResult": "Synced {pulled} from cloud, {pushed} to cloud."
+    "syncResult": "Synced {pulled} from cloud, {pushed} to cloud.",
+    "preferences": {
+      "title": "Preferences",
+      "units": {
+        "weight": "Weight",
+        "distance": "Distance"
+      },
+      "theme": {
+        "label": "Theme",
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "reminder": {
+        "label": "Daily reminder",
+        "set": "Set reminder",
+        "clear": "Turn off"
+      },
+      "notifications": "Notifications"
+    }
   },
   "paywall": {
     "title": "Go premium",
     "subtitle": "Cloud sync, multi-device, unlimited history",
     "trial": "Start free trial",
     "subscribe": "Subscribe",
-    "termsHint": "Recurring billing, cancel anytime."
+    "termsHint": "Recurring billing, cancel anytime.",
+    "gate": {
+      "generic": {
+        "title": "Premium feature",
+        "subtitle": "Unlock with premium. Cancel anytime.",
+        "cta": "Try premium"
+      },
+      "export_csv": {
+        "title": "Export your data",
+        "subtitle": "Download a CSV anytime. Premium only.",
+        "cta": "Try premium"
+      },
+      "cloud_sync": {
+        "title": "Sync across devices",
+        "subtitle": "Your data follows you to every phone and tablet.",
+        "cta": "Turn on sync"
+      },
+      "advanced_stats": {
+        "title": "Advanced stats",
+        "subtitle": "Trends, weekly summaries, and goal tracking.",
+        "cta": "See trends"
+      },
+      "smart_suggestions": {
+        "title": "Smart suggestions",
+        "subtitle": "Personalized tips based on your history.",
+        "cta": "Get tips"
+      },
+      "history_long": {
+        "title": "Full history",
+        "subtitle": "Look back further than 30 days.",
+        "cta": "Open history"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome",
+      "body": "Set up the app in a minute. Everything stays on your device unless you choose to sync.",
+      "cta": "Get started"
+    },
+    "profile": {
+      "title": "What should we call you?",
+      "body": "Used in greetings. You can change it later.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "cta": "Continue",
+      "skip": "Skip for now"
+    },
+    "preferences": {
+      "title": "Make it yours",
+      "units": {
+        "weight": "Weight",
+        "distance": "Distance"
+      },
+      "theme": "Theme",
+      "reminder": {
+        "label": "Daily reminder",
+        "cta": "Pick a time"
+      },
+      "notifications": {
+        "title": "Send daily reminders?",
+        "body": "We'll nudge you once a day. You can turn this off anytime.",
+        "allow": "Allow",
+        "skip": "Not now"
+      },
+      "cta": "Continue"
+    },
+    "done": {
+      "title": "You're set",
+      "body": "Everything's ready. Let's open the app.",
+      "cta": "Let's go"
+    }
+  },
+  "empty": {
+    "title": "Nothing here yet",
+    "body": "Add your first entry to get started.",
+    "cta": "Get started",
+    "generic": {
+      "title": "Nothing here yet",
+      "body": "Add your first entry to get started.",
+      "cta": "Get started"
+    }
+  },
+  "error": {
+    "generic": {
+      "title": "Something went wrong",
+      "body": "Try again in a moment.",
+      "retry": "Retry"
+    }
+  },
+  "loading": {
+    "generic": "Loading"
+  },
+  "toast": {
+    "deleted": "Deleted",
+    "undo": "Undo",
+    "synced": "Synced",
+    "saved": "Saved"
   }
 }

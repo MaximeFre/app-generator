@@ -37,13 +37,129 @@
     "upgrade": "Passer en premium",
     "restore": "Restaurer les achats",
     "syncNow": "Synchroniser",
-    "syncResult": "{pulled} récupérés, {pushed} envoyés."
+    "syncResult": "{pulled} récupérés, {pushed} envoyés.",
+    "preferences": {
+      "title": "Préférences",
+      "units": {
+        "weight": "Poids",
+        "distance": "Distance"
+      },
+      "theme": {
+        "label": "Thème",
+        "system": "Système",
+        "light": "Clair",
+        "dark": "Sombre"
+      },
+      "reminder": {
+        "label": "Rappel quotidien",
+        "set": "Définir un rappel",
+        "clear": "Désactiver"
+      },
+      "notifications": "Notifications"
+    }
   },
   "paywall": {
     "title": "Passe en premium",
     "subtitle": "Sync cloud, multi-appareils, historique illimité",
     "trial": "Commencer l'essai gratuit",
     "subscribe": "S'abonner",
-    "termsHint": "Renouvellement automatique, annulable à tout moment."
+    "termsHint": "Renouvellement automatique, annulable à tout moment.",
+    "gate": {
+      "generic": {
+        "title": "Fonction premium",
+        "subtitle": "Débloque avec premium. Annulable à tout moment.",
+        "cta": "Essayer premium"
+      },
+      "export_csv": {
+        "title": "Exporte tes données",
+        "subtitle": "Télécharge un CSV quand tu veux. Premium seulement.",
+        "cta": "Essayer premium"
+      },
+      "cloud_sync": {
+        "title": "Sync entre appareils",
+        "subtitle": "Tes données te suivent sur chaque téléphone et tablette.",
+        "cta": "Activer la sync"
+      },
+      "advanced_stats": {
+        "title": "Stats avancées",
+        "subtitle": "Tendances, résumés hebdo et suivi d'objectifs.",
+        "cta": "Voir les tendances"
+      },
+      "smart_suggestions": {
+        "title": "Suggestions intelligentes",
+        "subtitle": "Conseils personnalisés selon ton historique.",
+        "cta": "Voir les conseils"
+      },
+      "history_long": {
+        "title": "Historique complet",
+        "subtitle": "Remonte plus loin que 30 jours.",
+        "cta": "Ouvrir l'historique"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenue",
+      "body": "Configure l'app en une minute. Tout reste sur ton appareil sauf si tu choisis de synchroniser.",
+      "cta": "C'est parti"
+    },
+    "profile": {
+      "title": "On t'appelle comment ?",
+      "body": "Utilisé pour t'accueillir. Tu peux changer plus tard.",
+      "nameLabel": "Prénom",
+      "namePlaceholder": "Ton prénom",
+      "cta": "Continuer",
+      "skip": "Plus tard"
+    },
+    "preferences": {
+      "title": "Personnalise",
+      "units": {
+        "weight": "Poids",
+        "distance": "Distance"
+      },
+      "theme": "Thème",
+      "reminder": {
+        "label": "Rappel quotidien",
+        "cta": "Choisir l'heure"
+      },
+      "notifications": {
+        "title": "Activer les rappels ?",
+        "body": "On te ping une fois par jour. Désactivable à tout moment.",
+        "allow": "Autoriser",
+        "skip": "Plus tard"
+      },
+      "cta": "Continuer"
+    },
+    "done": {
+      "title": "Tout est prêt",
+      "body": "On peut ouvrir l'app.",
+      "cta": "On y va"
+    }
+  },
+  "empty": {
+    "title": "Rien ici pour l'instant",
+    "body": "Ajoute ta première entrée pour commencer.",
+    "cta": "Commencer",
+    "generic": {
+      "title": "Rien ici pour l'instant",
+      "body": "Ajoute ta première entrée pour commencer.",
+      "cta": "Commencer"
+    }
+  },
+  "error": {
+    "generic": {
+      "title": "Une erreur est survenue",
+      "body": "Réessaie dans un instant.",
+      "retry": "Réessayer"
+    }
+  },
+  "loading": {
+    "generic": "Chargement"
+  },
+  "toast": {
+    "deleted": "Supprimé",
+    "undo": "Annuler",
+    "synced": "Synchronisé",
+    "saved": "Enregistré"
   }
 }

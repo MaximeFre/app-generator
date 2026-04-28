@@ -14,6 +14,7 @@
     --color-secondary-foreground: 15 23 42;
     --color-border: 226 232 240;
     --color-destructive: 220 38 38;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
   }
 
   .dark {
@@ -27,5 +28,9 @@
     --color-secondary-foreground: 248 250 252;
     --color-border: 30 41 59;
     --color-destructive: 248 113 113;
+  }
+
+  body {
+    font-feature-settings: "tnum" on;
   }
 }
